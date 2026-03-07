@@ -2,20 +2,28 @@ const Movie = require("../models/movie");
 
 const createMovie = async (req, res) => {
   try {
+    console.log(req.body);
     const { title, year, genre, rating } = req.body;
+
+    if (!title || !year || !genre || !rating) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
 
     const newMovie = new Movie({
       title: title.trim(),
-      year: year,
-      genre: genre,
-      rating: rating,
+      year,
+      genre,
+      rating,
     });
 
     await newMovie.save();
 
-    res
+    return res
       .status(201)
-      .json({ success: true, message: "Movie craeted successfully" });
+      .json({ success: true, message: "Movie created successfully" });
   } catch (error) {
     console.error("Error creating Movie:", error);
     res.status(500).json({ success: false, message: error.message });
@@ -24,8 +32,12 @@ const createMovie = async (req, res) => {
 
 const getAllMovies = async (req, res) => {
   try {
-    const Movies = await Movie.find();
-    res.status(200).json({ success: true, Movies });
+    const movies = await Movie.find();
+    res.status(200).json({
+      success: true,
+      count: movies.length,
+      data: movies,
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ success: 500, message: "Server error", error });
@@ -34,7 +46,7 @@ const getAllMovies = async (req, res) => {
 
 const getMovie = async (req, res) => {
   try {
-    const { title } = req.query;
+    const { title } = req.body;
 
     const movies = await Movie.find({
       title: { $regex: title, $options: "i" },
