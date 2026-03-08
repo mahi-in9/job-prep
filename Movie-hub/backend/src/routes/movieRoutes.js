@@ -13,7 +13,7 @@ const {
 router.post("/add", createMovie);
 router.get("/all-movies", getAllMovies);
 router.get("/find-movie", getMovie);
-router.put("/update-movie", updateMovie);
-router.delete("/delete-movie", deleteMovie);
+router.put("/update-movie/:id", updateMovie);
+router.delete("/delete-movie/:id", deleteMovie);
 
 module.exports = router;

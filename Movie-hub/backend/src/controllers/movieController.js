@@ -1,3 +1,4 @@
+const movie = require("../models/movie");
 const Movie = require("../models/movie");
 
 const createMovie = async (req, res) => {
@@ -46,17 +47,28 @@ const getAllMovies = async (req, res) => {
 
 const getMovie = async (req, res) => {
   try {
-    const { title } = req.body;
+    console.log(req.query);
+    const { title } = req.query;
+
+    if (!title) {
+      return res.status(400).json({
+        success: false,
+        message: "Movie title is required",
+      });
+    }
 
     const movies = await Movie.find({
       title: { $regex: title, $options: "i" },
     });
 
-    if (!movies.length) {
+    if (movies.length === 0) {
       return res
         .status(404)
         .json({ success: false, message: "Movie Not Found" });
     }
+    return res
+      .status(200)
+      .json({ success: true, count: movies.length, data: movies });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -73,6 +85,7 @@ const updateMovie = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Movie Not Found" });
     }
+    return res.status(200).json({ success: true, data: movie });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -83,11 +96,11 @@ const deleteMovie = async (req, res) => {
     // const { title } = req.body;
 
     const movie = await Movie.findByIdAndDelete(req.params.id);
-    if (!movie) {
-      return res
-        .status(202)
-        .json({ success: true, message: "Movie deleted successfully" });
-    }
+    // if (!movie) {
+    return res
+      .status(202)
+      .json({ success: true, message: "Movie deleted successfully" });
+    // }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
