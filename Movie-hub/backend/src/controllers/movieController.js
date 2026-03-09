@@ -1,4 +1,3 @@
-const movie = require("../models/movie");
 const Movie = require("../models/movie");
 
 const createMovie = async (req, res) => {
@@ -94,10 +93,19 @@ const deleteMovie = async (req, res) => {
     // const { title } = req.body;
 
     const movie = await Movie.findByIdAndDelete(req.params.id);
-    // if (!movie) {
-    return res
-      .status(202)
-      .json({ success: true, message: "Movie deleted successfully" });
+
+    if (!movie) {
+      return res.status(404).json({
+        success: false,
+        message: "Movie not found",
+      });
+    }
+
+    return res.status(202).json({
+      success: true,
+      message: "Movie deleted successfully",
+      data: movie,
+    });
     // }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

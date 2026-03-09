@@ -1,6 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { fetchMovies, createMovies } from "../apps/slices/movieSlice";
+import {
+  fetchMovies,
+  createMovies,
+  updateMovies,
+  deleteMovie,
+} from "../apps/slices/movieSlice";
 
 function Home() {
   const dispatch = useDispatch();
@@ -11,6 +16,9 @@ function Home() {
     genre: "",
     rating: 0,
   });
+
+  const [editingId, setEditingId] = useState(null);
+  const [editMovie, setEditMovie] = useState({});
 
   useEffect(() => {
     dispatch(fetchMovies());
@@ -37,6 +45,30 @@ function Home() {
       genre: "",
       rating: 0,
     });
+  };
+
+  const handleEditClick = (movie) => {
+    setEditingId(movie._id);
+    setEditMovie(movie);
+  };
+
+  const handleSave = () => {
+    dispatch(
+      updateMovies({
+        id: editingId,
+        data: editMovie,
+      }),
+    );
+  };
+
+  const handleDelete = (id) => {
+    const confirmData = window.confirm(
+      "Are you sure you wan to delete this movie from your database",
+    );
+
+    if (confirmData) {
+      dispatch(deleteMovie(id));
+    }
   };
 
   return (
@@ -81,20 +113,64 @@ function Home() {
       </form>
 
       <div className="content">
-        {movies.map((m) => (
-          <div key={m._id}>
-            <p>
-              Title: <strong>{m.title}</strong>
-            </p>
-            <p>
-              Year: <strong>{m.year}</strong>
-            </p>
-            <p>
-              Genre: <strong>{m.genre}</strong>
-            </p>
-            <p>
-              Rating: <strong>{m.rating}✨</strong>
-            </p>
+        {movies.map((movie) => (
+          <div key={movie._id} className="card">
+            <div className="card-view">
+              {editingId === movie._id ? (
+                <>
+                  <input
+                    name="title"
+                    value={editMovie.title}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    name="year"
+                    type="number"
+                    value={editMovie.year}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    name="genre"
+                    value={editMovie.genre}
+                    onChange={handleChange}
+                  />
+
+                  <input
+                    name="rating"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={editMovie.rating}
+                    onChange={handleChange}
+                  />
+
+                  <button onClick={handleSave}>Save</button>
+                  <button onClick={() => setEditingId(null)}>Cancel</button>
+                </>
+              ) : (
+                <>
+                  <h3>{movie.title}</h3>
+                  <p>Year: {movie.year}</p>
+                  <p>Genre: {movie.genre}</p>
+                  <p>Rating: {movie.rating}</p>
+
+                  <button
+                    style={{ backgroundColor: "green" }}
+                    onClick={() => handleEditClick(movie)}
+                  >
+                    Edit📝
+                  </button>
+                  <button
+                    style={{ backgroundColor: "red" }}
+                    onClick={() => handleDelete(m._id)}
+                  >
+                    Delete 🗑️
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>

@@ -55,8 +55,8 @@ export const deleteMovie = createAsyncThunk(
   "movies/deleteMovie",
   async (id, thunkAPI) => {
     try {
-      const res = await axios.delete(`${API_URL}/${id}`);
-      return res.data.data;
+      await axios.delete(`${API_URL}/${id}`);
+      return id;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
     }
