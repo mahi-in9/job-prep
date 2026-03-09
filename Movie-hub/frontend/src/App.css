@@ -24,6 +24,10 @@ body,
     sans-serif;
 }
 
+h1 {
+  margin: 1rem;
+}
+
 .content {
   margin-top: 2rem;
 
@@ -43,5 +47,31 @@ body,
         cursor: pointer;
       }
     }
+  }
+}
+
+.add-movie {
+  margin: 2rem;
+  width: 100%;
+
+  /* display: flex; */
+
+  .input-line {
+    margin: 3px;
+
+    label {
+      font-size: large;
+      margin-right: 1rem;
+    }
+    input {
+      padding-block: 2px;
+    }
+  }
+
+  button {
+    margin-left: 4rem;
+    padding-inline: 2rem;
+    padding-block: 2px;
+    font-weight: bold;
   }
 }

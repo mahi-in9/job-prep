@@ -61,6 +61,11 @@ function Home() {
     );
   };
 
+  const handleEditChange = (e) =>{
+    
+
+  }
+
   const handleDelete = (id) => {
     const confirmData = window.confirm(
       "Are you sure you wan to delete this movie from your database",
@@ -74,83 +79,111 @@ function Home() {
   return (
     <>
       <h1>Movie 🎥</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          value={movie.title}
-          placeholder="Title"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="year"
-          value={movie.year}
-          placeholder="Year"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="genre"
-          value={movie.genre}
-          placeholder="Genre"
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="rating"
-          min={1}
-          max={10}
-          value={movie.rating}
-          placeholder="Rating"
-          onChange={handleChange}
-          required
-        />
+      <form onSubmit={handleSubmit} className="add-movie">
+        <div className="input-line">
+          <label htmlFor="title">Title</label>
+          <input
+            type="text"
+            name="title"
+            value={movie.title}
+            placeholder="Title"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="input-line">
+          <label htmlFor="year">Year</label>
+          <input
+            type="number"
+            name="year"
+            value={movie.year || ""}
+            placeholder="Year"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="input-line">
+          <label htmlFor="title">Genre</label>
+          <input
+            type="text"
+            name="genre"
+            value={movie.genre}
+            placeholder="Genre"
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="input-line">
+          <label htmlFor="title">Rating</label>
+          <input
+            type="number"
+            name="rating"
+            min={1}
+            max={10}
+            value={movie.rating || ""}
+            placeholder="Enter rating✨"
+            step={"any"}
+            onChange={handleChange}
+            required
+          />
+        </div>
         <button type="submit">Add</button>
       </form>
 
       <div className="content">
         {movies.map((movie) => (
           <div key={movie._id} className="card">
-            <div className="card-view">
+            <>
               {editingId === movie._id ? (
-                <>
-                  <input
-                    name="title"
-                    value={editMovie.title}
-                    onChange={handleChange}
-                  />
+                <div className="card-view">
+                  <div className="input-line">
+                    <label htmlFor="title">Title</label>
+                    <input
+                      name="title"
+                      value={editMovie.title}
+                      onChange={handleEditChange}
+                    />
+                  </div>
 
-                  <input
-                    name="year"
-                    type="number"
-                    value={editMovie.year}
-                    onChange={handleChange}
-                  />
+                  <div className="input-line">
+                    <label htmlFor="title">Title</label>
+                    <input
+                      name="year"
+                      type="number"
+                      value={editMovie.year}
+                      onChange={handleEditChange}
+                    />
+                  </div>
 
-                  <input
-                    name="genre"
-                    value={editMovie.genre}
-                    onChange={handleChange}
-                  />
+                  <div className="input-line">
+                    <label htmlFor="title">Title</label>
+                    <input
+                      name="genre"
+                      value={editMovie.genre}
+                      onChange={handleEditChange}
+                    />
+                  </div>
 
-                  <input
-                    name="rating"
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={editMovie.rating}
-                    onChange={handleChange}
-                  />
+                  <div className="input-line">
+                    <label htmlFor="title">Title</label>
+                    <input
+                      name="rating"
+                      type="number"
+                      min="1"
+                      max="10"
+                      value={editMovie.rating}
+                      onChange={handleEditChange}
+                    />
+                  </div>
 
                   <button onClick={handleSave}>Save</button>
                   <button onClick={() => setEditingId(null)}>Cancel</button>
-                </>
+                </div>
               ) : (
-                <>
+                <div className="card-view">
                   <h3>{movie.title}</h3>
                   <p>Year: {movie.year}</p>
                   <p>Genre: {movie.genre}</p>
@@ -168,9 +201,9 @@ function Home() {
                   >
                     Delete 🗑️
                   </button>
-                </>
+                </div>
               )}
-            </div>
+            </>
           </div>
         ))}
       </div>
