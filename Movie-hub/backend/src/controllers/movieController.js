@@ -22,9 +22,7 @@ const createMovie = async (req, res) => {
 
     await newMovie.save();
 
-    return res
-      .status(201)
-      .json({ success: true, message: "Movie created successfully" });
+    return res.status(201).json({ success: true, data: newMovie });
   } catch (error) {
     console.error("Error creating Movie:", error);
     res.status(500).json({ success: false, message: error.message });
