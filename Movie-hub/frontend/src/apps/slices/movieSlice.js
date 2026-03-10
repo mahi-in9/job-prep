@@ -43,10 +43,10 @@ export const updateMovies = createAsyncThunk(
   "movie/updateMovie",
   async ({ id, data }, thunkAPI) => {
     try {
-      const res = await axios.get(`${API_URL}/${id}`, data);
+      const res = await axios.put(`${API_URL}/${id}`, data);
       return res.data.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   },
 );

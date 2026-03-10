@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   fetchMovies,
   createMovies,
@@ -10,6 +10,12 @@ import {
 function Home() {
   const dispatch = useDispatch();
   const { movies, loading, error } = useSelector((state) => state.movies);
+
+  const [search, setSearch] = useState("");
+  const [genreFilter, setGenreFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [movie, setMovie] = useState({
     title: "",
     year: 0,
@@ -20,10 +26,11 @@ function Home() {
   const [editingId, setEditingId] = useState(null);
   const [editMovie, setEditMovie] = useState({});
 
+  const itemsPerPage = 5;
+
   useEffect(() => {
     dispatch(fetchMovies());
-  }, []);
-  console.log(movies);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,6 +66,8 @@ function Home() {
         data: editMovie,
       }),
     );
+
+    setEditingId(null);
   };
 
   const handleEditChange = (e) => {
@@ -77,9 +86,86 @@ function Home() {
     }
   };
 
+  const processedMovie = useMemo(() => {
+    let data = [...movies];
+
+    if (search) {
+      data = data.filter((movie) =>
+        movie.title.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    if (genreFilter !== "all") {
+      data = data.filter((m) => m.genre === genreFilter);
+    }
+
+    if (sortBy === "title") {
+      data.sort((a, b) => a.title.localeCompare(b.title));
+    }
+    if (sortBy === "year") {
+      data.sort((a, b) => a.year - b.year);
+    }
+    if (sortBy === "rating") {
+      data.sort((a, b) => a.rating - b.rating);
+    }
+
+    return data;
+  }, [search, movies, sortBy, genreFilter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, genreFilter, sortBy]);
+
+  const firstIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = firstIndex + itemsPerPage;
+
+  const paginatedData = processedMovie.slice(firstIndex, endIndex);
+
+  const totalPage = Math.ceil(movies.length / itemsPerPage);
+
+  const genres = useMemo(() => {
+    return [...new Set(movies.map((m) => m.genre))];
+  }, [movies]);
+
   return (
     <>
       <h1>Movie 🎥</h1>
+
+      <header>
+        <div className="controlls">
+          <input
+            type="text"
+            placeholder="movies"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              fontWeight: "4px",
+              padding: "4px",
+            }}
+          />
+
+          <select
+            value={genreFilter}
+            onChange={(e) => setGenreFilter(e.target.value)}
+          >
+            <option value="all">All Genres</option>
+
+            {genres.map((genre) => (
+              <option value={genre} key={genre}>
+                {genre}
+              </option>
+            ))}
+          </select>
+
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="">Sort</option>
+            <option value="title">Title</option>
+            <option value="year">Year</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+      </header>
+
       <form onSubmit={handleSubmit} className="add-movie">
         <div className="input-line">
           <label htmlFor="title">Title</label>
@@ -135,7 +221,7 @@ function Home() {
       </form>
 
       <div className="content">
-        {movies.map((movie) => (
+        {paginatedData.map((movie) => (
           <div key={movie._id} className="card">
             <>
               {editingId === movie._id ? (
@@ -205,7 +291,7 @@ function Home() {
                   </button>
                   <button
                     style={{ backgroundColor: "red" }}
-                    onClick={() => handleDelete(m._id)}
+                    onClick={() => handleDelete(movie._id)}
                   >
                     Delete 🗑️
                   </button>
@@ -215,6 +301,30 @@ function Home() {
           </div>
         ))}
       </div>
+
+      <footer
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "1rem",
+          padding: "1rem",
+        }}
+      >
+        <button
+          disabled={currentPage === 1}
+          style={{ padding: "0.5rem" }}
+          onClick={() => setCurrentPage(currentPage - 1)}
+        >
+          Prev
+        </button>
+        <button
+          disabled={currentPage === totalPage}
+          onClick={() => setCurrentPage(currentPage + 1)}
+          style={{ padding: "0.5rem" }}
+        >
+          Next
+        </button>
+      </footer>
     </>
   );
 }
