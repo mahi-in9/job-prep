@@ -28,6 +28,12 @@ h1 {
   margin: 1rem;
 }
 
+h3 {
+  display: flex;
+  margin: 0.5rem;
+  justify-content: center;
+}
+
 .content {
   margin-top: 2rem;
 
@@ -37,22 +43,52 @@ h1 {
   .card {
     margin: 1rem;
     border: rgb(146, 142, 142) 1px solid;
-    border-radius: 2px;
+    border-radius: 1rem;
     padding: 7px;
+    box-shadow: 5px 5px 10px gainsboro;
 
     .card-view {
       margin: 3px;
+
+      .input-line {
+        label {
+          margin: 4px;
+        }
+
+        input {
+          margin-block: 4px;
+          padding: 4px;
+        }
+      }
+
       button {
+        margin: 4px;
+        padding: 4px;
+        border: black 2px solid;
+        border-radius: 4px;
+
         margin-top: 5px;
         cursor: pointer;
+      }
+
+      .cancel-btn {
+        background-color: red;
+      }
+      .save-btn {
+        background-color: aqua;
       }
     }
   }
 }
 
 .add-movie {
+  width: 300px;
   margin: 2rem;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 5px 5px 10px gainsboro;
 
   /* display: flex; */
 
@@ -69,9 +105,14 @@ h1 {
   }
 
   button {
+    width: 100px;
     margin-left: 4rem;
     padding-inline: 2rem;
     padding-block: 2px;
     font-weight: bold;
   }
+}
+
+.add-movie:hover {
+  box-shadow: 8px 8px 20px rgba(252, 254, 255, 0.2);
 }

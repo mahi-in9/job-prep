@@ -61,10 +61,11 @@ function Home() {
     );
   };
 
-  const handleEditChange = (e) =>{
-    
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
 
-  }
+    setEditMovie((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleDelete = (id) => {
     const confirmData = window.confirm(
@@ -149,7 +150,7 @@ function Home() {
                   </div>
 
                   <div className="input-line">
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title">Year</label>
                     <input
                       name="year"
                       type="number"
@@ -159,7 +160,7 @@ function Home() {
                   </div>
 
                   <div className="input-line">
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title">Genre</label>
                     <input
                       name="genre"
                       value={editMovie.genre}
@@ -168,7 +169,7 @@ function Home() {
                   </div>
 
                   <div className="input-line">
-                    <label htmlFor="title">Title</label>
+                    <label htmlFor="title">Rating</label>
                     <input
                       name="rating"
                       type="number"
@@ -179,8 +180,15 @@ function Home() {
                     />
                   </div>
 
-                  <button onClick={handleSave}>Save</button>
-                  <button onClick={() => setEditingId(null)}>Cancel</button>
+                  <button className="save-btn" onClick={handleSave}>
+                    Save
+                  </button>
+                  <button
+                    className="cancel-btn"
+                    onClick={() => setEditingId(null)}
+                  >
+                    Cancel
+                  </button>
                 </div>
               ) : (
                 <div className="card-view">
