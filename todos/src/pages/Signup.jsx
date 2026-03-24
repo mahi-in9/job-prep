@@ -37,44 +37,51 @@ function SignUp() {
   };
 
   return (
-    <>
-      <h1>SignUp</h1>
+    <div className="flex flex-col">
+      <h1 className="text-2xl m-3 font-bold">SignUp</h1>
 
-      <form action="submit">
-        <div>
+      <form action="submit" className="flex flex-col gap-2 m-4">
+        <div className="flex gap-1">
           <label htmlFor="title">Title</label>
           <input
             type="text"
             name="title"
             value={userData.title}
             onChange={handleChange}
+            className="border rounded"
           />
         </div>
-        <div>
+        <div className="flex gap-1">
           <label htmlFor="email">Email</label>
           <input
             type="email"
             name="email"
             value={userData.email}
             onChange={handleChange}
+            className="border rounded"
           />
         </div>
-        <div>
+        <div className="flex gap-1">
           <label htmlFor="password">Password</label>
           <input
             type="password"
             name="password"
             value={userData.password}
             onChange={handleChange}
+            className="border rounded"
           />
         </div>
         <div>
-          <button type="submit" onClick={handleSubmit}>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="border rounded p-1 hover:bg-mist-500 "
+          >
             Submit
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 

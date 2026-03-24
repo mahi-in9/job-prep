@@ -35,28 +35,39 @@ function Login() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="flex flex-col">
+      <h1 className="text-2xl m-3 font-bold">Login</h1>
 
-      <form action="submit" onSubmit={handleSubmit}>
-        <div>
+      <form
+        action="submit"
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-3 m-5 "
+      >
+        <div className="flex gap-1">
           <label htmlFor="email">Email</label>
           <input
             type="email"
             name="email"
             value={userData.email}
             onChange={handleChange}
+            className="border rounded"
           />
         </div>
-        <div>
+        <div className="flex gap-1">
           <label htmlFor="password">Password</label>
           <input
             type="password"
             name="password"
             value={userData.password}
             onChange={handleChange}
+            className="border rounded"
           />
-          <button type="submit">Login</button>
+          <button
+            type="submit"
+            className="border rounded p-1 hover:bg-fuchsia-100 "
+          >
+            Login
+          </button>
         </div>
       </form>
     </div>

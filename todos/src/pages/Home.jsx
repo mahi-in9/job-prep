@@ -21,14 +21,23 @@ import { Link } from "react-router-dom";
 
 function Home() {
   return (
-    <div>
-      <h1>This is Home</h1>
-      <Link to={"/todos"}>Todos</Link>
-      <br />
-      <Link to={"/signup"}>SignUp</Link>
-      <br />
-      <Link to={"/login"}>Login</Link>
-      <br />
+    <div className="grid grid-cols-1">
+      <div className="p-3 font-extrabold text-2xl ">
+        <h1>This is Home</h1>
+      </div>
+      <div className=" flex mx-2 gap-4 font-bold ">
+        <Link to={"/todos"} className="border rounded p-3">
+          Todos
+        </Link>
+
+        <Link to={"/signup"} className="border rounded p-3">
+          SignUp
+        </Link>
+
+        <Link to={"/login"} className="border rounded p-3">
+          Login
+        </Link>
+      </div>
       {/* <LogoutButton /> */}
     </div>
   );
