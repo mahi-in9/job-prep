@@ -13,7 +13,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchMe()); // 🔥 restores user from cookie
+    dispatch(fetchMe());
   }, []);
   return (
     <div className="">

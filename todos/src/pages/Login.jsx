@@ -22,9 +22,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const res = await dispatch(loginUser(userData));
-
     if (res.meta.requestStatus === "fulfilled") {
       navigate("/");
     }
