@@ -76,15 +76,18 @@ function Movies() {
     setEditMovie((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDelete = (id) => {
-    const confirmData = window.confirm(
-      "Are you sure you wan to delete this movie from your database",
-    );
+  const handleDelete = useCallback(
+    (id) => {
+      const confirmData = window.confirm(
+        "Are you sure you wan to delete this movie from your database",
+      );
 
-    if (confirmData) {
-      dispatch(deleteMovie(id));
-    }
-  };
+      if (confirmData) {
+        dispatch(deleteMovie(id));
+      }
+    },
+    [dispatch],
+  );
 
   const processedMovie = useMemo(() => {
     let data = [...movies];
