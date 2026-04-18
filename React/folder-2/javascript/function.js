@@ -1,7 +1,10 @@
-function setCount(a) {
-  return (a = a);
+
+function print() {
+  let count = 3;
+  const intrval = setInterval(()=>{
+    console.log("hello")
+    count--;
+    if(count === 0) clearInterval(intrval)
+  }, 1000)
 }
-
-let count = 3;
-
-console.log(setCount((c) => c + 1, count));
+print()
