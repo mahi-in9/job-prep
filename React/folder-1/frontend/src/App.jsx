@@ -3,12 +3,12 @@ import "./App.css";
 
 function App() {
   const [text, setText] = useState("");
-  const [result, setResult] = useState({});
+  const result = validation(text);
 
   function validation(text) {
     const result = {};
     result.minChar = text.length < 8 ? false : true;
-    result.hasLowerCase = /[a-z]/.test(text);
+    result.hasUpperCase = /[A-Z]/.test(text);
     result.hasNumber = /[0-9]/.test(text);
     result.hasSymbol = /[^A-Za-z0-9]/.test(text);
     console.log(result);
@@ -16,12 +16,11 @@ function App() {
   }
 
   const handleChange = (e) => {
-    setText(e.target.value);
-    setResult(validation(text));
+    const value = e.target.value;
+    setText(value);
   };
-  validation(text);
+  console.log(result);
 
- 
   return (
     <div className="m-10">
       <input
@@ -31,12 +30,25 @@ function App() {
       />
       {text && (
         <p>
-          Password should be -
-          <span className={result.minChar ? "text-red-500" : "text-white"}>
+          Password should be -{" "}
+          <span className={result.minChar ? "valid" : "invalid"}>
+            {" "}
             min 8 chars
           </span>
-          , <span>one uppercase</span>, <span>one number</span>,{" "}
-          <span>one special char</span>
+          ,{" "}
+          <span className={result.hasUpperCase ? "valid" : "invalid"}>
+            {" "}
+            one uppercase
+          </span>
+          ,{" "}
+          <span className={result.hasNumber ? "valid" : "invalid"}>
+            {" "}
+            one number
+          </span>
+          ,{" "}
+          <span className={result.hasSymbol ? "valid" : "invalid"}>
+            one special char
+          </span>
         </p>
       )}
     </div>
