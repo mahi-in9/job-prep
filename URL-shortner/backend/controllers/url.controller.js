@@ -19,9 +19,27 @@ async function createURL(req, res) {
     const orgURl = orgURl.create({
       url,
     });
+    const token = generateToken(url);
     const newUrl = URL.create({
       urlId: url._id,
+      newUrl: `http://localstorage:4000/${token}`,
     });
+
+    return res
+      .status(201)
+      .json({
+        success: true,
+        message: "url created successfully",
+        data: newUrl,
+      });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "server error" });
+  }
+}
+
+async function getURL(req, res) {
+  try {
+    
   } catch (error) {
     return res.status(500).json({ success: false, message: "server error" });
   }
