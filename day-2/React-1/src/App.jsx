@@ -1,45 +1,84 @@
-import { useState, useRef, useEffect } from "react";
-import "./App.css";
+import { useEffect, useRef, useState } from "react";
 
-function App() {
-  const [word, setWord] = useState("");
-  const [save, setSave] = useState("idle");
+export default function App() {
+  const [text, setText] = useState(() => {
+    return localStorage.getItem("value") || "";
+  });
 
-  const timeRef = useRef(null);
+  const [delay, setDelay] = useState(() => {
+    return Number(localStorage.getItem("delay")) || 0;
+  });
 
-  const handleChange = (e) => {
-    setWord(e.target.value);
+  const [save, setSave] = useState("");
+
+  const time = useRef(null);
+  const delayTime = useRef(null);
+
+  function handleChange(e) {
+    let value = e.target.value;
 
     setSave("saving");
+    setText(value);
 
-    if (timeRef.current) {
-      clearTimeout(timeRef.current);
+    if (time.current) {
+      clearTimeout(time.current);
     }
 
-    timeRef.current = setTimeout(() => {
+    time.current = setTimeout(() => {
+      localStorage.setItem("value", value);
       setSave("saved");
-    }, 2000);
-  };
+    }, delay);
+  }
+
+  function handleDelay(e) {
+    let val = Number(e.target.value);
+
+    setDelay(val);
+    setSave("saving");
+    if (delayTime.current) {
+      clearTimeout(delayTime.current);
+    }
+
+    delayTime.current = setTimeout(() => {
+      localStorage.setItem("delay", val);
+      setSave("saved");
+    }, 0);
+  }
 
   useEffect(() => {
     return () => {
-      if (timeRef.current) {
-        clearTimeout(timeRef.current);
+      if (time.current) {
+        clearTimeout(time.current);
       }
     };
   }, []);
 
   return (
-    <>
-      <section>
-        <input type="text" placeholder="Type here" onChange={handleChange} />
-        <div>
-          <p>{save === "saving" && "Saving..."}</p>
-          <p>{save === "saved" && "Saved"}</p>
-        </div>
-      </section>
-    </>
+    <div className="app">
+      <h2>Type here</h2>
+      <div className="">
+        <label>Input Text box</label>
+        <input
+          type="text"
+          placeholder="type here..."
+          onChange={handleChange}
+          value={text}
+        />
+      </div>
+      <div>
+        <label>Delay box</label>
+        <input
+          type="text"
+          placeholder="enter delay time..."
+          value={delay}
+          onChange={handleDelay}
+        />
+      </div>
+      <div className="save">
+        <p>
+          {save === "saving" ? "Saving..." : save === "saved" ? "saved" : ""}
+        </p>
+      </div>
+    </div>
   );
 }
-
-export default App;
