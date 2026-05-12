@@ -1,99 +1,35 @@
-require("dotenv").config();
-
 const express = require("express");
-const mongoose = require("mongoose");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const app = express();
+const server = http.createServer(app);
 
-app.use(express.json());
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("mongoDb connencted"))
-  .catch((error) => console.log(error));
-
-let userSchema = mongoose.Schema({
-  title: { type: String, required: true },
-  marks: { type: Number, required: true },
-  grade: { type: String, required: true },
-  isScholar: { type: Boolean },
-});
-mongoose.model("User", userSchema);
-
-app.get("/api/mongo/fetch", async (req, res) => {
-  try {
-    const data = await User.find();
-    res.status(200).json({
-      success: true,
-      data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["POST", "GET"],
+  },
 });
 
-app.post("/api/mongo/seed", async (req, res) => {
-  try {
-    const users = req.body;
+io.on("connection", (socket) => {
+  console.log("User connected");
 
-    if (!Array.isArray(users)) {
-      return res.status(400).json({
-        success: false,
-        message: "Request body must be an array",
-      });
-    }
+  socket.on("message", (msg) => {
+    console.log("message: ", msg);
 
-    const inserted = await User.insertMany(users);
+    socket.emit("welcome", msg);
+  });
 
-    res.status(201).json({
-      success: true,
-      count: inserted.length,
-      data: inserted,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
 });
 
-app.post("/api/mongo/update-scholar", async (req, res) => {
-  try {
-    const users = await User.findOneAndUpdate(
-      { _id: id, user: req.user.id },
-      req.body,
-      { new: true },
-    );
-    if (users.length) {
-      return res.status(400).json({ success: false, message: "no user found" });
-    }
-    users = users
-      .filter((user) => {
-        if (user.marks >= 75 && user.grade === "A") {
-          return user;
-        }
-      })
-      .map((user) => {
-        return { ...user, isScholar: true };
-      });
-
-    users.save();
-
-    return res.status(200).json({ success: true, message: "scholar updated" });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+app.get("/", async (req, res) => {
+  res.send("running running..");
 });
 
-const PORT = 4000;
-
-app.listen(PORT, () => {
-  console.log("app is running on PORT", PORT);
+server.listen(3000, () => {
+  console.log("app started...");
 });
